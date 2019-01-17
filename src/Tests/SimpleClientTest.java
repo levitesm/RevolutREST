@@ -5,9 +5,6 @@ import Management.*;
 import Types.*;
 import Exceptions.*;
 
-import java.util.LinkedList;
-import java.util.Set;
-
 import DataModel.*;
 
 public class SimpleClientTest {

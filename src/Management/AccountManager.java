@@ -10,7 +10,7 @@ import Types.UsId;
 
 public class AccountManager {
 
-	private static HashMap<AccId, Account> accounts = new HashMap<>();
+	private static volatile HashMap<AccId, Account> accounts = new HashMap<>();
 	 
 	public static Set<AccId> getAllAccountIds(){
 		return accounts.keySet();
@@ -28,7 +28,7 @@ public class AccountManager {
 	{
 		User user = UserManager.getUserById(userId);
 		Account a = new Account(user);
-		accounts.put(a.getID(), a);
+		synchronized(accounts) {accounts.put(a.getID(), a);}
 		return a.getID();
 	}
 	
@@ -36,9 +36,11 @@ public class AccountManager {
 	{
 		if(accounts.containsKey(id)) 
 			{
-			accounts.get(id).getUser().getAccounts().remove(id);
-			accounts.remove(id);
-			
+			synchronized(accounts) {
+				Account a = accounts.get(id);
+				synchronized(a) {a.getUser().getAccounts().remove(id);}
+				accounts.remove(id);
+			}
 			}
 		else
 			throw new NoSuchAccountException(id);

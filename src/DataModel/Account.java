@@ -12,16 +12,18 @@ public class Account {
 	
 	private final User user;
 	
-	private LinkedList<Balance> balances;
+	private volatile LinkedList<Balance> balances;
 	
-	private static long lastId=0;
+	private static volatile Long lastId=new Long(0);
 
 	
 	public Account(User user) {
 		super();
 		this.user = user;
-		ID=new AccId(++lastId);
-		user.getAccounts().add(ID);
+		
+		synchronized (lastId) {ID=new AccId(++lastId);}
+		synchronized (user) {user.getAccounts().add(ID);}
+		
 		balances=new LinkedList<Balance>();
 	}
 

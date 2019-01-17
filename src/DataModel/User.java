@@ -14,14 +14,15 @@ public class User {
 	private long telNum;
 	private String address;
 	
-	private LinkedList<AccId> accounts;
+	private volatile LinkedList<AccId> accounts;
 	
-	private static long lastId=0;
+	private static volatile Long lastId=new Long(0);
 	
 	
 	public User(String fName, String lName, int age, long telNum, String address) {
 		super();
-		this.ID=new UsId(++lastId);
+		synchronized (lastId) {this.ID=new UsId(++lastId);}
+		
 		this.fName = fName;
 		this.lName = lName;
 		this.age = age;

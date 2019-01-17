@@ -12,7 +12,7 @@ import Types.UsId;
 
 public class UserManager{
 
-	private static HashMap<UsId, User> users = new HashMap<>();
+	private static volatile HashMap<UsId, User> users = new HashMap<>();
 	 
 	public static Set<UsId> getAllUserIds(){
 		return users.keySet();
@@ -29,7 +29,7 @@ public class UserManager{
 	public static UsId addNewUser(String fName, String lName, int age, long telNum, String address)
 	{
 		User u = new User(fName, lName, age, telNum, address);
-		users.put(u.getID(), u);
+		synchronized(users) {users.put(u.getID(), u);}
 		return u.getID();
 	}
 	
@@ -56,7 +56,7 @@ public class UserManager{
 				} catch (NoSuchAccountException e) {
 					System.err.println("UNEXPECTED ERROR IN USERS STRUCTURE!!!");
 				}
-			users.remove(id);
+			synchronized(users) {users.remove(id);}
 		}
 			
 		else

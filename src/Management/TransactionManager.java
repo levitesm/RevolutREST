@@ -16,7 +16,7 @@ import Types.TransType;
 
 public class TransactionManager {
 	
-	private static LinkedList<Transaction> transactions = new LinkedList<>();
+	private static volatile LinkedList<Transaction> transactions = new LinkedList<>();
 	
 public static LinkedList<Transaction> getTransactionList()
 {
@@ -63,7 +63,7 @@ public static void putMoney(AccId to, double sum, Currency toCur) throws NoSuchA
 	a.addMoney(sum, toCur);
 	
 	
-	transactions.add(new Transaction(new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(new Date()), TransType.PUT, new LinkedList<AccId>(Arrays.asList(to)), "Money input to AccountId " + to +" : "+sum+" ("+toCur+")"));
+	synchronized(transactions) {transactions.add(new Transaction(new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(new Date()), TransType.PUT, new LinkedList<AccId>(Arrays.asList(to)), "Money input to AccountId " + to +" : "+sum+" ("+toCur+")"));}
 }
 
 public static void withdrawMoney(AccId from, double sum, Currency fromCur) throws NoSuchAccountException, NotEnoughMoneyException, NoSuchCerrencyException, WrongAmountException
@@ -75,7 +75,7 @@ public static void withdrawMoney(AccId from, double sum, Currency fromCur) throw
 	a.getMoney(sum, fromCur);
 	
 	
-	transactions.add(new Transaction(new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(new Date()), TransType.WITHDRAW, new LinkedList<AccId>(Arrays.asList(from)), "Money withdraw from AccountId " + from +" : "+sum+" ("+fromCur+")"));
+	synchronized(transactions) {transactions.add(new Transaction(new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(new Date()), TransType.WITHDRAW, new LinkedList<AccId>(Arrays.asList(from)), "Money withdraw from AccountId " + from +" : "+sum+" ("+fromCur+")"));}
 }
 
 public static void transferMoney(AccId from, AccId to, double sum, Currency fromCur, Currency toCur) throws NoSuchAccountException, NotEnoughMoneyException, NoSuchCerrencyException, WrongAmountException
@@ -87,8 +87,7 @@ public static void transferMoney(AccId from, AccId to, double sum, Currency from
 	a1.getMoney(sum, fromCur);
 	a2.addMoney(sum*fromCur.getRate()/toCur.getRate(), toCur);
 	
-	
-	transactions.add(new Transaction(new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(new Date()), TransType.TRANSFER, new LinkedList<AccId>(Arrays.asList(from,to)), "Money transfer from AccountId " + from + " to AccountId "+ to +" : "+sum+" ("+fromCur+"->"+toCur+")"));
+	synchronized(transactions) {transactions.add(new Transaction(new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(new Date()), TransType.TRANSFER, new LinkedList<AccId>(Arrays.asList(from,to)), "Money transfer from AccountId " + from + " to AccountId "+ to +" : "+sum+" ("+fromCur+"->"+toCur+")"));}
 }
 
 public static void transferMoney(AccId from, AccId to, double sum, Currency fromCur) throws NoSuchAccountException, NotEnoughMoneyException, NoSuchCerrencyException, WrongAmountException
