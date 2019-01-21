@@ -2,26 +2,24 @@ package DataModel;
 
 import java.util.LinkedList;
 
-import Types.AccId;
-import Types.UsId;
 
 public class User {
 
-	private final UsId ID;
+	private final Long ID;
 	private String fName;
 	private String lName;
 	private int age;
 	private long telNum;
 	private String address;
 	
-	private volatile LinkedList<AccId> accounts;
+	private volatile LinkedList<Long> accounts;
 	
-	private static volatile Long lastId=new Long(0);
+	private static volatile Long lastId=new Long(1000000000);
 	
 	
 	public User(String fName, String lName, int age, long telNum, String address) {
 		super();
-		synchronized (lastId) {this.ID=new UsId(++lastId);}
+		synchronized (lastId) {this.ID=++lastId;}
 		
 		this.fName = fName;
 		this.lName = lName;
@@ -32,7 +30,7 @@ public class User {
 		this.accounts = new LinkedList<>();
 	}
 	
-	public UsId getID() {
+	public Long getID() {
 		return ID;
 	}
 
@@ -67,7 +65,7 @@ public class User {
 		this.address = address;
 	}
 
-	public LinkedList<AccId> getAccounts() {
+	public LinkedList<Long> getAccounts() {
 		return accounts;
 	}
 	

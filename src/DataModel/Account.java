@@ -8,26 +8,26 @@ import Types.Currency;
 
 public class Account {
 	
-	private final AccId ID;
+	private final Long ID;
 	
 	private final User user;
 	
 	private volatile LinkedList<Balance> balances;
 	
-	private static volatile Long lastId=new Long(0);
+	private static volatile Long lastId=new Long(200000000);
 
 	
 	public Account(User user) {
 		super();
 		this.user = user;
 		
-		synchronized (lastId) {ID=new AccId(++lastId);}
+		synchronized (lastId) {ID=++lastId;}
 		synchronized (user) {user.getAccounts().add(ID);}
 		
 		balances=new LinkedList<Balance>();
 	}
 
-	public AccId getID() {
+	public Long getID() {
 		return ID;
 	}
 

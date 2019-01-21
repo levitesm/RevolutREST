@@ -1,11 +1,10 @@
 package Exceptions;
 
-import Types.UsId;
 
 public class NoSuchUserException extends Exception {
 
 	
-	public NoSuchUserException(UsId id) {
+	public NoSuchUserException(Long id) {
 		this("No user found for ID: "+id);
 		
 	}

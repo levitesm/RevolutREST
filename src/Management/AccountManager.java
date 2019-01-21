@@ -5,18 +5,16 @@ import java.util.*;
 import DataModel.*;
 import Exceptions.NoSuchAccountException;
 import Exceptions.NoSuchUserException;
-import Types.AccId;
-import Types.UsId;
 
 public class AccountManager {
 
-	private static volatile HashMap<AccId, Account> accounts = new HashMap<>();
+	private static volatile HashMap<Long, Account> accounts = new HashMap<>();
 	 
-	public static Set<AccId> getAllAccountIds(){
+	public static Set<Long> getAllAccountIds(){
 		return accounts.keySet();
 	}
 	
-	public static Account getAccountById(AccId id) throws NoSuchAccountException
+	public static Account getAccountById(Long id) throws NoSuchAccountException
 	{
 		if(accounts.containsKey(id)) 
 			return accounts.get(id);
@@ -24,7 +22,7 @@ public class AccountManager {
 			throw new NoSuchAccountException(id);
 	}
 	
-	public static AccId addNewAccount(UsId userId) throws NoSuchUserException
+	public static Long addNewAccount(Long userId) throws NoSuchUserException
 	{
 		User user = UserManager.getUserById(userId);
 		Account a = new Account(user);
@@ -32,7 +30,7 @@ public class AccountManager {
 		return a.getID();
 	}
 	
-	public static void deleteAccountById(AccId id) throws NoSuchAccountException
+	public static void deleteAccountById(Long id) throws NoSuchAccountException
 	{
 		if(accounts.containsKey(id)) 
 			{
@@ -46,7 +44,13 @@ public class AccountManager {
 			throw new NoSuchAccountException(id);
 	}
 	
-	public static String printAccountBalances(AccId id) throws NoSuchAccountException
+	/**
+	 * NOT USED FOR REST
+	 * @param id
+	 * @return String for printing of all Balances for the Account
+	 * @throws NoSuchAccountException
+	 */
+	public static String printAccountBalances(Long id) throws NoSuchAccountException
 	{
 		StringBuffer str = new StringBuffer("");
 		if(accounts.containsKey(id)) {System.out.println("Account "+id);

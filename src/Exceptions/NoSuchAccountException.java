@@ -1,11 +1,10 @@
 package Exceptions;
 
-import Types.AccId;
 
 public class NoSuchAccountException extends Exception {
 
 	
-	public NoSuchAccountException(AccId id) {
+	public NoSuchAccountException(Long id) {
 		this("No account found for ID: "+id);
 		
 	}
